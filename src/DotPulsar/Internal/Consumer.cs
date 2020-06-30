@@ -106,7 +106,7 @@ namespace DotPulsar.Internal
             Console.WriteLine($"[internal] NACK {messageId} in 5s");
             await Task.Delay(5000).ConfigureAwait(false);
             Console.WriteLine($"[internal] redeliver {messageId}");
-            await RedeliverUnacknowledgedMessages(new List<MessageId>() { messageId }, cancellationToken);
+            await RedeliverUnacknowledgedMessages(new List<MessageId>() { messageId }, cancellationToken).ConfigureAwait(false);
             Console.WriteLine($"[internal] redelivered {messageId}");
         }
 
@@ -166,12 +166,15 @@ namespace DotPulsar.Internal
 
         private async ValueTask RedeliverUnacknowledgedMessages(List<MessageIdData> messageIds, CancellationToken cancellationToken)
         {
+            Console.WriteLine($"[internal] Redelivering {messageIds.Count()} messages ...");
             ThrowIfDisposed();
-
+            Console.WriteLine($"[internal] Initiate executor");
             await _executor.Execute(() =>
             {
+                Console.WriteLine($"[internal] execute start");
                 _cachedCommandRedeliverUnacknowledgedMessages.MessageIds.Clear();
-                _cachedCommandAck.MessageIds.AddRange(messageIds);
+                _cachedCommandRedeliverUnacknowledgedMessages.MessageIds.AddRange(messageIds);
+                Console.WriteLine($"[internal] sending {_cachedCommandRedeliverUnacknowledgedMessages}");
                 return _channel.Send(_cachedCommandRedeliverUnacknowledgedMessages, cancellationToken);
             }, cancellationToken).ConfigureAwait(false);
         }

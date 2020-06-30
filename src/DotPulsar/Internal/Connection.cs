@@ -203,10 +203,14 @@ namespace DotPulsar.Internal
         {
             ThrowIfDisposed();
 
+            System.Console.WriteLine($"[Connection] awaiting lock for {command}..");
             using (await _lock.Lock(cancellationToken).ConfigureAwait(false))
             {
+                System.Console.WriteLine($"[Connection] received lock");
                 var sequence = Serializer.Serialize(command);
+                System.Console.WriteLine($"[Connection] sending..");
                 await _stream.Send(sequence).ConfigureAwait(false);
+                System.Console.WriteLine($"[Connection] sent!");
             }
         }
 

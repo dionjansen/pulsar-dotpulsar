@@ -40,11 +40,14 @@ namespace DotPulsar.Internal
             {
                 try
                 {
+                    System.Console.Write("[Executor] executing task..");
                     action();
+                    System.Console.Write("[Executor] done!..");
                     return;
                 }
                 catch (Exception ex)
                 {
+                    System.Console.Write($"[Executor] task failed {ex}");
                     if (await Handle(ex, cancellationToken).ConfigureAwait(false))
                         throw;
                 }

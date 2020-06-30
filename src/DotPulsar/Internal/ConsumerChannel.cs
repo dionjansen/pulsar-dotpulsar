@@ -108,7 +108,9 @@ namespace DotPulsar.Internal
         public async Task Send(CommandRedeliverUnacknowledgedMessages command, CancellationToken cancellationToken)
         {
             command.ConsumerId = _id;
+            Console.WriteLine($"[ConsumerChannel] sending {command} to {command.ConsumerId}");
             await _connection.Send(command, cancellationToken).ConfigureAwait(false);
+            Console.WriteLine($"[ConsumerChannel] done");
         }
 
         public async Task<CommandSuccess> Send(CommandUnsubscribe command, CancellationToken cancellationToken)
@@ -157,7 +159,7 @@ namespace DotPulsar.Internal
 
             if (_firstFlow)
             {
-                _cachedCommandFlow.MessagePermits = (uint) Math.Ceiling(_cachedCommandFlow.MessagePermits * 0.5);
+                _cachedCommandFlow.MessagePermits = (uint)Math.Ceiling(_cachedCommandFlow.MessagePermits * 0.5);
                 _firstFlow = false;
             }
 
