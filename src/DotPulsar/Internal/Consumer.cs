@@ -107,7 +107,7 @@ namespace DotPulsar.Internal
             await Task.Delay(5000).ConfigureAwait(false);
             Console.WriteLine($"[internal] redeliver {messageId}");
             await RedeliverUnacknowledgedMessages(new List<MessageId>() { messageId }, cancellationToken);
-            Console.WriteLine($"[internal] redelived {messageId}");
+            Console.WriteLine($"[internal] redelivered {messageId}");
         }
 
 
