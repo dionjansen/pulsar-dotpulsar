@@ -29,7 +29,9 @@ namespace Reading
         {
             const string myTopic = "persistent://public/default/mytopic";
 
-            await using var client = PulsarClient.Builder().Build(); //Connecting to pulsar://localhost:6650
+            await using var client = PulsarClient.Builder()
+                .ServiceUrl(new Uri("pulsar://host.docker.internal:6650"))
+                .Build();
 
             var reader = client.NewReader()
                 .StartMessageId(MessageId.Earliest)
