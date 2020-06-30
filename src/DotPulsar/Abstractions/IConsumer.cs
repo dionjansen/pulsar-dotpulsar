@@ -34,6 +34,8 @@ namespace DotPulsar.Abstractions
         /// </summary>
         ValueTask Acknowledge(MessageId messageId, CancellationToken cancellationToken = default);
 
+        ValueTask NegativeAcknowledge(MessageId messageId, CancellationToken cancellationToken = default);
+
         /// <summary>
         /// Acknowledge the consumption of all the messages in the topic up to and including the provided message.
         /// </summary>

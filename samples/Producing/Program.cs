@@ -61,7 +61,9 @@ namespace Producing
             {
                 while (!cancellationToken.IsCancellationRequested)
                 {
-                    var data = Encoding.UTF8.GetBytes("Sent " + DateTime.UtcNow);
+                    var msg = $"Sent {DateTime.UtcNow}";
+                    Console.WriteLine($"Sending '{msg}'");
+                    var data = Encoding.UTF8.GetBytes(msg);
                     _ = await producer.Send(data, cancellationToken).ConfigureAwait(false);
                     await Task.Delay(delay).ConfigureAwait(false);
                 }

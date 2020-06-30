@@ -101,6 +101,16 @@ namespace DotPulsar.Internal
         public async ValueTask Acknowledge(MessageId messageId, CancellationToken cancellationToken)
             => await Acknowledge(messageId.Data, CommandAck.AckType.Individual, cancellationToken).ConfigureAwait(false);
 
+        public async ValueTask NegativeAcknowledge(MessageId messageId, CancellationToken cancellationToken)
+        {
+            Console.WriteLine($"[internal] NACK {messageId} in 5s");
+            await Task.Delay(5000).ConfigureAwait(false);
+            Console.WriteLine($"[internal] redeliver {messageId}");
+            await RedeliverUnacknowledgedMessages(new List<MessageId>() { messageId }, cancellationToken);
+            Console.WriteLine($"[internal] redelived {messageId}");
+        }
+
+
         public async ValueTask AcknowledgeCumulative(Message message, CancellationToken cancellationToken)
             => await Acknowledge(message.MessageId.Data, CommandAck.AckType.Cumulative, cancellationToken).ConfigureAwait(false);
 

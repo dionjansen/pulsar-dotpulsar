@@ -64,8 +64,10 @@ namespace Consuming
                 await foreach (var message in consumer.Messages(cancellationToken))
                 {
                     var data = Encoding.UTF8.GetString(message.Data.ToArray());
-                    Console.WriteLine("Received: " + data);
-                    await consumer.Acknowledge(message, cancellationToken).ConfigureAwait(false);
+                    Console.WriteLine($"Received: {data}  Redelivery count: {message.RedeliveryCount}");
+                    Console.WriteLine($"nacking message");
+                    var nack = consumer.NegativeAcknowledge(message.MessageId, cancellationToken);
+                    Console.WriteLine($"Message processed");
                 }
             }
             catch (OperationCanceledException) { }
